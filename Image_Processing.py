@@ -370,3 +370,24 @@ def brightness_division():
     new_arr = img_arr.astype('uint8')
     new_img = Image.fromarray(new_arr)
     new_img.save("static/images/img_now.jpg")
+
+
+def threshold(lower_thres, upper_thres):
+    # Load the image
+    img = Image.open("static/images/img_now.jpg")
+
+    # Convert the image to a NumPy array
+    img_arr = np.array(img)
+
+    # Create a condition for pixels within the specified threshold range
+    condition = np.logical_and(np.greater_equal(img_arr, lower_thres),
+                               np.less_equal(img_arr, upper_thres))
+
+    # Replace pixel values outside the threshold range with 255
+    img_arr[~condition] = 255
+
+    # Create a new PIL Image from the modified NumPy array
+    new_img = Image.fromarray(img_arr)
+
+    # Save the new image
+    new_img.save("static/images/img_now.jpg")

@@ -63,27 +63,6 @@ def upload():
     return render_template("processing.html", image_name=filename)
 
 
-# rotate filename the specified degrees
-@app.route("/rotate", methods=["POST"])
-def rotate():
-    # retrieve parameters from html form
-    angle = request.form['angle']
-    filename = request.form['image']
-
-    # open and process image
-    target = os.path.join(APP_ROOT, 'static/images')
-    destination = "/".join([target, filename])
-
-    img = Image.open(destination)
-    img = img.rotate(-1*int(angle))
-
-    # save and return image
-    destination = "/".join([target, 'temp.png'])
-    if os.path.isfile(destination):
-        os.remove(destination)
-    img.save(destination)
-
-    return send_image('temp.png')
 
 
 # retrieve file from 'static/images' directory
@@ -97,7 +76,7 @@ def equalization():
     filename = request.form['image']
     Image_Processing.histogram_equalizer()
     processing_thread = threading.Thread(
-        target=Image_Processing.generate_histogram('static/images/img_now.jpg', 'static/images'))
+        target=Image_Processing.both_histogram('static/images/img_now.jpg'))
     processing_thread.start()
 
     # Wait for the processing thread to finish
@@ -276,7 +255,7 @@ def histogram_specification():
 
         # Start a thread to process the image (if needed)
         processing_thread = threading.Thread(
-            target=Image_Processing.generate_histogram('static/images/img_now.jpg', 'static/images'))
+        target=Image_Processing.both_histogram('static/images/img_now.jpg'))
         processing_thread.start()
         processing_thread.join()
 
@@ -395,6 +374,24 @@ def brightness_division():
     processing_thread.start()
     processing_thread.join()
     return render_template("processing.html", image_name=image_name)
+
+
+@app.route("/thresholding", methods=["POST"])
+def thresholding():
+    image_name = request.form['image']
+    
+    lower_thres = int(request.form['lower_thres'])
+    upper_thres = int(request.form['upper_thres'])
+    Image_Processing.threshold(lower_thres, upper_thres)
+    processing_thread = threading.Thread(
+        target=lambda: Image_Processing.both_histogram('static/images/img_now.jpg'))
+    processing_thread.start()
+    processing_thread.join()
+    
+    return render_template("processing.html", image_name=image_name)
+
+
+
 
 
 if __name__ == "__main__":

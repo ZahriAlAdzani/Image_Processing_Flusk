@@ -189,6 +189,18 @@
                 <input type="hidden" name="image" value="{{ image_name }}">
             </form>
         </div>
+
+        <div class="col-lg-6">
+            <h4>segmentation</h4>
+
+            <!-- Move Left Form -->
+            <form id="form-segmentation" action="{{ url_for('thresholding') }}" method="POST" enctype="multipart/form-data">
+                <input type="number" name="lower_thres" placeholder="0-255" required>
+                <input type="number" name="upper_thres" placeholder="0-255" required>
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="Thresholing">Thresholding</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+        </div>
         
     </div>
 
