@@ -1,0 +1,51 @@
+.btn-lg,
+.nav-pills > li > a,
+.container .jumbotron {
+    border: 0px;
+    border-radius: 0px;
+}
+.image-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-container {
+    text-align: center;
+    margin: 10px;
+}
+
+.image-container img {
+    max-width: 400px;
+    height: auto;
+}
+
+.image-container p {
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+#upload-button,
+#file-picker {
+    margin-top: 30px;
+}
+
+div#image-container {
+    max-width: 500px;
+}
+
+div#image-container > img {
+    max-width: 100%;
+}
+
+#form-crop > input[type=number] {
+    width: 50px;
+} 
+
+#form-blend > input[type=number] {
+    width: 77px;
+} 
+
+.hidden {
+	display: none !important;
+}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Process your image</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="../static/jumbotron-narrow.css" rel="stylesheet">
+
+    <link href="../static/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class="active"><a href="/">Home</a></li>
+                    <li role="presentation"><a href="https://github.com/gxercavins">gxercavins</a></li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">Process your image</h3>
+        </div>
+        <div class="jumbotron">
+            <img src="/static/images/img_now.jpg" style="max-width: 600px;">
+            <p>Image Processed Here</p>
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div class="image-container">
+            <img src="{{ url_for('send_image', filename=image_name) }}" alt="Original Image">
+            <p>Original</p>
+        </div>
+        <div class="image-container">
+            <img src="/static/images/img_grayscale.jpg" alt="Grayscale Image">
+            <p>Original Grayscale</p>
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div class="image-container">
+            <img src="/static/images/grey_histogram.jpg" alt="Grey Histogram">
+            <p>Grey Histogram</p>
+        </div>
+        <div class="image-container">
+            <img src="/static/images/red_histogram.jpg" alt="Red Histogram">
+            <p>Red Histogram</p>
+        </div>
+        <div class="image-container">
+            <img src="/static/images/green_histogram.jpg" alt="Green Histogram">
+            <p>Green Histogram</p>
+        </div>
+        <div class="image-container">
+            <img src="/static/images/blue_histogram.jpg" alt="Blue Histogram">
+            <p>Blue Histogram</p>
+        </div>
+    </div>
+
+    <div class="row marketing">
+            <div class="col-lg-6">
+                <h4>Histogram Processing</h4>
+                <form id="form-equalization" action="{{ url_for('equalization') }}" method="POST" enctype="multipart/form-data">
+                    <button id="btnColor" class="btn btn-lg btn-success" type="submit" name="mode" value="color">Equalization</button>
+                    <input type="hidden" name="image" value="{{ image_name }}">
+                </form>
+                <form id="form-histogram-specification" action="{{ url_for('histogram_specification') }}" method="POST" enctype="multipart/form-data">
+                    <!-- Second Image Upload -->
+                    <div class="form-group">
+                        <label for="second_image">Upload Second Image:</label>
+                        <input type="file" name="second_image" id="second_image" accept=".jpg, .jpeg, .png">
+                        <input type="hidden" name="image" value="{{ image_name }}">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button class="btn btn-lg btn-primary" type="submit">Specify Histogram</button>
+                </form>
+
+            </div>
+        </div>
+
+
+        <!-- New Image Processing Operations -->
+
+        <div class="col-lg-6">
+            <h4>Image Filter</h4>
+            <form id="form-normal" action="{{ url_for('normal') }}" method="POST" enctype="multipart/form-data">
+                <button id="btnColor" class="btn btn-lg btn-success" type="submit" name="mode" value="color">normal</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+            <form id="form-image-sharpening" action="{{ url_for('image_sharpening') }}" method="POST" enctype="multipart/form-data">
+                <button id="btnImageSharpening" class="btn btn-lg btn-success" type="submit" name="mode" value="sharpen">Sharpen Image</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+            <form id="form-blur" action="{{ url_for('blur') }}" method="POST" enctype="multipart/form-data">
+                <button id="btnBlur" class="btn btn-lg btn-success" type="submit" name="mode" value="blur">Apply Blur</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+            <form id="form-edge-detection" action="{{ url_for('edge_detection') }}" method="POST" enctype="multipart/form-data">
+                <button id="btnEdgeDetection" class="btn btn-lg btn-success" type="submit" name="mode" value="edge">Detect Edges</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+            <form id="form-blend" action="{{ url_for('blend') }}" method="POST" enctype="multipart/form-data">
+                <!-- Second Image Upload -->
+                <div class="form-group">
+                    <label for="second_image">Upload blend Image:</label>
+                    <input type="number" name="alpha" placeholder="alpha(%)" min="0" max="100" required>
+                    <input type="file" name="blend_image" id="blend_image" accept=".jpg, .jpeg, .png">
+                    <input type="hidden" name="image" value="{{ image_name }}">
+                </div>
+
+                <!-- Submit Button -->
+                <button class="btn btn-lg btn-primary" type="submit">Blend Image</button>
+            </form>
+        </div>
+
+        <div class="col-lg-6">
+            <h4>Image Movement</h4>
+
+            <!-- Move Left Form -->
+            <form id="form-move-left" action="{{ url_for('move_left') }}" method="POST" enctype="multipart/form-data">
+                <input type="number" name="pixels" placeholder="Pixels to Move Left" required>
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Move Left</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+
+            <!-- Move Right Form -->
+            <form id="form-move-right" action="{{ url_for('move_right') }}" method="POST" enctype="multipart/form-data">
+                <input type="number" name="pixels" placeholder="Pixels to Move Right" required>
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="right">Move Right</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+
+            <!-- Move Up Form -->
+            <form id="form-move-up" action="{{ url_for('move_up') }}" method="POST" enctype="multipart/form-data">
+                <input type="number" name="pixels" placeholder="Pixels to Move Up" required>
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="up">Move Up</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+
+            <!-- Move Down Form -->
+            <form id="form-move-down" action="{{ url_for('move_down') }}" method="POST" enctype="multipart/form-data">
+                <input type="number" name="pixels" placeholder="Pixels to Move Down" required>
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="down">Move Down</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+
+            <!-- Zoom In Form -->
+            <form id="form-zoom-in" action="{{ url_for('zoom_in') }}" method="POST" enctype="multipart/form-data">
+                <input type="number" name="factor" step="0.1" placeholder="Zoom In Factor" required>
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="zoom_in">Zoom In</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+
+            <!-- Zoom Out Form -->
+            <form id="form-zoom-out" action="{{ url_for('zoom_out') }}" method="POST" enctype="multipart/form-data">
+                <input type="number" name="factor" step="0.1" placeholder="Zoom Out Factor" required>
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="zoom_out">Zoom Out</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+        </div>
+        <div class="col-lg-6">
+            <h4>Image Brightness Adjustment</h4>
+        
+            <!-- Brightness Addition Form -->
+            <form id="form-brightness-addition" action="{{ url_for('brightness_addition') }}" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="addition">Add Brightness</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+        
+            <!-- Brightness Subtraction Form -->
+            <form id="form-brightness-subtraction" action="{{ url_for('brightness_subtraction') }}" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="subtraction">Subtract Brightness</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+        
+            <!-- Brightness Multiplication Form -->
+            <form id="form-brightness-multiplication" action="{{ url_for('brightness_multiplication') }}" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="multiplication">Multiply Brightness</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+        
+            <!-- Brightness Division Form -->
+            <form id="form-brightness-division" action="{{ url_for('brightness_division') }}" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="division">Divide Brightness</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+        </div>
+        
+    </div>
+
+    <footer class="footer">
+        <p>&copy; gxercavins 2017. Using Python, Flask and PIL.</p>
+    </footer>
+
+    </div>
+</body>
+
+</html>
