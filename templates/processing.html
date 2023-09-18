@@ -19,7 +19,7 @@
             <nav>
                 <ul class="nav nav-pills pull-right">
                     <li role="presentation" class="active"><a href="/">Home</a></li>
-                    <li role="presentation"><a href="https://github.com/gxercavins">gxercavins</a></li>
+                    <li role="presentation"><a href="https://github.com/ZahriAlAdzani/Image_Processing_Flusk">Flusk Image Processing</a></li>
                 </ul>
             </nav>
             <h3 class="text-muted">Process your image</h3>
@@ -27,6 +27,8 @@
         <div class="jumbotron">
             <img src="/static/images/img_now.jpg" style="max-width: 600px;">
             <p>Image Processed Here</p>
+            <p>Print Size: <span id="print-size">{{ image_width }} x {{ image_height }}</span></p>
+
         </div>
     </div>
 
@@ -59,7 +61,7 @@
             <p>Blue Histogram</p>
         </div>
     </div>
-
+    
     <div class="row marketing">
             <div class="col-lg-6">
                 <h4>Histogram Processing</h4>
@@ -162,6 +164,17 @@
                 <input type="hidden" name="image" value="{{ image_name }}">
             </form>
         </div>
+
+        <div class="col-lg-6">
+            <h4>Image puzzle</h4>
+            <!-- Move Left Form -->
+            <form id="form-move-left" action="{{ url_for('puzzle') }}" method="POST" enctype="multipart/form-data">
+                <input type="number" name="piece" placeholder="puzzlepiece" required>
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Move Left</button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+        </div>
+
         <div class="col-lg-6">
             <h4>Image Brightness Adjustment</h4>
         
@@ -192,7 +205,6 @@
 
         <div class="col-lg-6">
             <h4>segmentation</h4>
-
             <!-- Move Left Form -->
             <form id="form-segmentation" action="{{ url_for('thresholding') }}" method="POST" enctype="multipart/form-data">
                 <input type="number" name="lower_thres" placeholder="0-255" required>
@@ -201,11 +213,10 @@
                 <input type="hidden" name="image" value="{{ image_name }}">
             </form>
         </div>
-        
     </div>
 
     <footer class="footer">
-        <p>&copy; gxercavins 2017. Using Python, Flask and PIL.</p>
+        <p>&copy; Zahri 211524032. Using Python, Flask, PIL, and opencv..</p>
     </footer>
 
     </div>

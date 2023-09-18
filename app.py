@@ -60,9 +60,12 @@ def upload():
     # Wait for the processing thread to finish
     processing_thread.join()
 
-    return render_template("processing.html", image_name=filename)
-
-
+    # Open the uploaded image using PIL
+    with Image.open(destination) as img:
+        width, height = img.size
+    
+    # Pass the image dimensions to the HTML template
+    return render_template("processing.html", image_name=filename, image_width=width, image_height=height)
 
 
 # retrieve file from 'static/images' directory
@@ -255,7 +258,7 @@ def histogram_specification():
 
         # Start a thread to process the image (if needed)
         processing_thread = threading.Thread(
-        target=Image_Processing.both_histogram('static/images/img_now.jpg'))
+            target=Image_Processing.both_histogram('static/images/img_now.jpg'))
         processing_thread.start()
         processing_thread.join()
 
@@ -379,7 +382,7 @@ def brightness_division():
 @app.route("/thresholding", methods=["POST"])
 def thresholding():
     image_name = request.form['image']
-    
+
     lower_thres = int(request.form['lower_thres'])
     upper_thres = int(request.form['upper_thres'])
     Image_Processing.threshold(lower_thres, upper_thres)
@@ -387,11 +390,22 @@ def thresholding():
         target=lambda: Image_Processing.both_histogram('static/images/img_now.jpg'))
     processing_thread.start()
     processing_thread.join()
-    
+
     return render_template("processing.html", image_name=image_name)
 
 
+@app.route("/puzzle", methods=["POST"])
+def puzzle():
+    piece = int(request.form['piece'])
+    processing_thread = threading.Thread(
+        target=lambda: Image_Processing.puzzle(piece))
+    processing_thread.start()
+    processing_thread.join()
 
+    image_files = [f for f in os.listdir(
+        'static/temp/puzzle/') if f.endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp'))]
+
+    return render_template("puzlle.html", image_files=image_files)
 
 
 if __name__ == "__main__":

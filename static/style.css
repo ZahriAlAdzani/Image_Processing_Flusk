@@ -49,3 +49,9 @@ div#image-container > img {
 .hidden {
 	display: none !important;
 }
+/* Style the print size text */
+#print-size {
+    color: maroon; /* Set the text color */
+    font-size: 16px; /* Set the font size */
+    font-weight: bold; /* Add font weight */
+}

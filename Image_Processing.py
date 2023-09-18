@@ -240,56 +240,37 @@ def move_down(img_path, pixels):
     return True
 
 
-def zoom_in(img_path, factor):
-    img = Image.open(img_path)
-    img = img.convert("RGB")
-    img_arr = np.asarray(img)
-    height, width, channels = img_arr.shape
-    new_height = int(height * factor)
-    new_width = int(width * factor)
+def zoom_in(img_path, zoom_factor):
+    # Load the image
+    image = cv2.imread(img_path)
 
-    # Create a new array filled with black pixels
-    new_arr = np.zeros((new_height, new_width, channels), dtype=np.uint8)
+    # Get the height and width of the image
+    height, width = image.shape[:2]
 
-    for i in range(new_height):
-        for j in range(new_width):
-            # Calculate the corresponding pixel coordinates in the original image
-            original_i = int(i // factor)
-            original_j = int(j // factor)
-            new_arr[i, j] = img_arr[original_i, original_j]
+    # Calculate the new dimensions after zooming in
+    new_height = int(height / zoom_factor)
+    new_width = int(width / zoom_factor)
 
-    new_img = Image.fromarray(new_arr)
-    new_img.save("static/images/img_now.jpg")
+    # Resize the image using the calculated dimensions
+    zoomed_image = cv2.resize(image, (new_width, new_height))
+
+    cv2.imwrite(f"{save_dir}/img_now.jpg", zoomed_image)
 
 
-def zoom_out(img_path, factor):
-    img = Image.open(img_path)
-    img = img.convert("RGB")
-    img_arr = np.asarray(img)
-    height, width, channels = img_arr.shape
-    new_height = int(height // factor)
-    new_width = int(width // factor)
+def zoom_out(img_path, zoom_factor):
+    # Load the image
+    image = cv2.imread(img_path)
 
-    # Create a new array filled with black pixels
-    new_arr = np.zeros((new_height, new_width, channels), dtype=np.uint8)
+    # Get the height and width of the image
+    height, width = image.shape[:2]
 
-    for i in range(new_height):
-        for j in range(new_width):
-            r_sum, g_sum, b_sum = 0, 0, 0
-            # Calculate the corresponding pixel coordinates in the original image
-            for x in range(int(factor)):
-                for y in range(int(factor)):
-                    original_i = int(i * factor + x)
-                    original_j = int(j * factor + y)
-                    pixel_value = img_arr[original_i, original_j]
-                    r_sum += pixel_value[0]
-                    g_sum += pixel_value[1]
-                    b_sum += pixel_value[2]
-            new_arr[i, j] = (int(r_sum // (factor ** 2)), int(g_sum //
-                             (factor ** 2)), int(b_sum // (factor ** 2)))
+    # Calculate the new dimensions after zooming out
+    new_height = int(height * zoom_factor)
+    new_width = int(width * zoom_factor)
 
-    new_img = Image.fromarray(new_arr)
-    new_img.save("static/images/img_now.jpg")
+    # Resize the image using the calculated dimensions
+    zoomed_image = cv2.resize(image, (new_width, new_height))
+    cv2.imwrite(f"{save_dir}/img_now.jpg", zoomed_image)
 
 
 def histogram_specification_Done(image, reference_hist):
@@ -391,3 +372,29 @@ def threshold(lower_thres, upper_thres):
 
     # Save the new image
     new_img.save("static/images/img_now.jpg")
+
+
+def puzzle(size):
+    # Open the image
+    image = Image.open('static/images/img_now.jpg')
+
+    # Get the width and height of the image
+    width, height = image.size
+
+    # Calculate the dimensions for each quarter
+    quarter_width = width // size
+    quarter_height = height // size
+
+    # Crop and save each quarter
+    for i in range(size):
+        for j in range(size):
+            left = i * quarter_width
+            upper = j * quarter_height
+            right = left + quarter_width
+            lower = upper + quarter_height
+
+            # Crop the quarter
+            quarter = image.crop((left, upper, right, lower))
+
+            # Save the cropped quarter
+            quarter.save(f"{'static/temp/puzzle/image'}_piece_{i}_{j}.jpg")
