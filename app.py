@@ -5,6 +5,8 @@ import os
 from PIL import Image
 import Image_Processing
 import threading
+from collections import Counter
+import random
 
 
 app = Flask(__name__)
@@ -25,6 +27,15 @@ def process_image(destination):
     status2 = Image_Processing.histogram_rgb(destination)
     if status1 and status2:
         print("Image processing completed.")
+
+# Custom Jinja2 filter to zip lists
+
+
+def zip_lists(a, b, c):
+    return zip(a, b, c)
+
+
+app.jinja_env.filters['zip_lists'] = zip_lists
 
 
 @app.route("/upload", methods=["POST"])
@@ -63,9 +74,10 @@ def upload():
     # Open the uploaded image using PIL
     with Image.open(destination) as img:
         width, height = img.size
-    
+
+    df = Image_Processing.table_Data()
     # Pass the image dimensions to the HTML template
-    return render_template("processing.html", image_name=filename, image_width=width, image_height=height)
+    return render_template("processing.html", image_name=filename, image_width=width, image_height=height, table=df.to_html(classes='table table-striped'))
 
 
 # retrieve file from 'static/images' directory
@@ -397,15 +409,44 @@ def thresholding():
 @app.route("/puzzle", methods=["POST"])
 def puzzle():
     piece = int(request.form['piece'])
+
     processing_thread = threading.Thread(
         target=lambda: Image_Processing.puzzle(piece))
     processing_thread.start()
     processing_thread.join()
+    image_urls = []
+    for i in range(piece):
+        row = []
+        for j in range(piece):
+            # Construct the image file path
+            image_path = f"static/temp/puzzle/image_piece_{i}_{j}.jpg"
+            row.append(image_path)
+        image_urls.append(row)
 
-    image_files = [f for f in os.listdir(
-        'static/temp/puzzle/') if f.endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp'))]
+    return render_template('puzlle.html', image_urls=image_urls, size=piece)
 
-    return render_template("puzlle.html", image_files=image_files)
+
+@app.route("/puzzle_random", methods=["POST"])
+def puzzle_random():
+    piece = int(request.form['piece'])
+
+    processing_thread = threading.Thread(
+        target=lambda: Image_Processing.puzzle(piece))
+    processing_thread.start()
+    processing_thread.join()
+    image_urls = []
+    for i in range(piece):
+        row = []
+        for j in range(piece):
+            # Construct the image file path
+            image_path = f"static/temp/puzzle/image_piece_{i}_{j}.jpg"
+            row.append(image_path)
+        image_urls.append(row)
+
+    random.shuffle(image_urls)
+    for row in image_urls:
+        random.shuffle(row)
+    return render_template('puzlle.html', image_urls=image_urls, size=piece)
 
 
 if __name__ == "__main__":

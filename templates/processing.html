@@ -170,7 +170,12 @@
             <!-- Move Left Form -->
             <form id="form-move-left" action="{{ url_for('puzzle') }}" method="POST" enctype="multipart/form-data">
                 <input type="number" name="piece" placeholder="puzzlepiece" required>
-                <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Move Left</button>
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Puzzle normal </button>
+                <input type="hidden" name="image" value="{{ image_name }}">
+            </form>
+            <form id="form-move-left" action="{{ url_for('puzzle_random') }}" method="POST" enctype="multipart/form-data">
+                <input type="number" name="piece" placeholder="puzzlepiece" required>
+                <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Puzzle random </button>
                 <input type="hidden" name="image" value="{{ image_name }}">
             </form>
         </div>
@@ -214,6 +219,15 @@
             </form>
         </div>
     </div>
+
+    <div class="container">
+        <div>
+                <div class="container mt-5">
+                    {{ table | safe }}
+                </div>
+        </div>
+    </div>
+    
 
     <footer class="footer">
         <p>&copy; Zahri 211524032. Using Python, Flask, PIL, and opencv..</p>

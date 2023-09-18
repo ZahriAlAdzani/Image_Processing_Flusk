@@ -4,9 +4,10 @@ from PIL import Image, ImageFilter
 import matplotlib.pyplot as plt
 from collections import Counter
 import os
-
+import pandas as pd
 import matplotlib
 import cv2
+import random
 matplotlib.use('Agg')
 
 save_dir = "static/images"  # Change this directory to match your HTML
@@ -398,3 +399,67 @@ def puzzle(size):
 
             # Save the cropped quarter
             quarter.save(f"{'static/temp/puzzle/image'}_piece_{i}_{j}.jpg")
+
+
+def table_Data():
+    # Read the image
+    img = cv2.imread('static/images/img_now.jpg')
+
+    if img is None:
+        raise ValueError("Image not found or cannot be read.")
+
+    # Initialize dictionaries to store counts for each channel
+    r_counts = {i: 0 for i in range(256)}
+    g_counts = {i: 0 for i in range(256)}
+    b_counts = {i: 0 for i in range(256)}
+
+    # Split the image into its RGB channels
+    b, g, r = cv2.split(img)
+
+    # Count pixel values in each channel
+    for i in range(256):
+        r_counts[i] = np.count_nonzero(r == i)
+        g_counts[i] = np.count_nonzero(g == i)
+        b_counts[i] = np.count_nonzero(b == i)
+
+    # Create a DataFrame to store the results
+    data = {'Pixel Value': list(range(256)),
+            'R Channel Count': [r_counts[i] for i in range(256)],
+            'G Channel Count': [g_counts[i] for i in range(256)],
+            'B Channel Count': [b_counts[i] for i in range(256)]}
+
+    df = pd.DataFrame(data)
+
+    return df
+
+
+def puzzle_random(piece):
+    # Open the image
+    image = Image.open('static/images/img_now.jpg')
+
+    # Get the width and height of the image
+    width, height = image.size
+
+    # Calculate the dimensions for each quarter
+    quarter_width = width // piece
+    quarter_height = height // piece
+
+    # Create a list of coordinates for cropping
+    coordinates = [(i, j) for i in range(piece) for j in range(piece)]
+
+    # Shuffle the list of coordinates randomly
+    random.shuffle(coordinates)
+
+    # Crop and save each quarter in random order
+    for i, j in coordinates:
+        left = i * quarter_width
+        upper = j * quarter_height
+        right = left + quarter_width
+        lower = upper + quarter_height
+
+        # Crop the quarter
+        quarter = image.crop((left, upper, right, lower))
+
+        # Save the cropped quarter with a random name
+        random_name = f"{'static/temp/puzzle/image'}_piece_{i}_{j}.jpg"
+        quarter.save(random_name)

@@ -1,28 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Image Gallery</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Puzzle</title>
+    <style>
+      .puzzle {
+        display: grid;
+        grid-template-columns: repeat(
+          {{size}},
+          1fr
+        ); /* Adjust based on your puzzle size */
+        gap: 10px;
+      }
+
+      .puzzle img {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
   </head>
   <body>
-    <h1>Image Gallery</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Image</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for image_file in image_files %}
-        <tr>
-          <td>
-            <img
-              src="{{ url_for('static', filename='temp/puzzle/' + image_file) }}"
-              alt="{{ image_file }}"
-            />
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <h1>Puzzle</h1>
+    <div class="puzzle">
+      {% for i in range(size) %} {% for j in range(size) %}
+      <img src="{{ image_urls[j][i] }}" alt="Puzzle Piece" />
+      {% endfor %} {% endfor %}
+    </div>
   </body>
 </html>
