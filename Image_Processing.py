@@ -463,3 +463,86 @@ def puzzle_random(piece):
         # Save the cropped quarter with a random name
         random_name = f"{'static/temp/puzzle/image'}_piece_{i}_{j}.jpg"
         quarter.save(random_name)
+
+
+def identityFilter():
+    kernel = np.array([[0, 0, 0],
+                       [0, 1, 0],
+                       [0, 0, 0]])
+
+    img = cv2.imread('static/images/img_now.jpg')
+    identity = cv2.filter2D(src=img, ddepth=-1, kernel=kernel)
+    cv2.imwrite("static/images/img_now.jpg", identity)
+
+
+def MeanFilter():
+
+    kernel = np.ones((3, 3), np.float32) / 9
+    img = cv2.imread('static/images/img_now.jpg')
+    blur = cv2.filter2D(src=img, ddepth=-1, kernel=kernel)
+    cv2.imwrite("static/images/img_now.jpg", blur)
+
+
+def BetterBlur(blur):
+    img = cv2.imread('static/images/img_now.jpg')
+    cv_blur = cv2.blur(src=img, ksize=(blur, blur))
+    cv2.imwrite("static/images/img_now.jpg", cv_blur)
+
+
+def GaussianBlur(kernel):
+    img = cv2.imread('static/images/img_now.jpg')
+    cv_gaussianblur = cv2.GaussianBlur(
+        src=img, ksize=(kernel, kernel), sigmaX=0)
+    cv2.imwrite("static/images/img_now.jpg", cv_gaussianblur)
+
+
+def MedianBlur(kernel):
+    img = cv2.imread('static/images/img_now.jpg')
+    cv_median = cv2.medianBlur(src=img, ksize=kernel)
+    cv2.imwrite("static/images/img_now.jpg", cv_median)
+
+
+def BillateralFilter(Dimension, sigma_color, sigma_space):
+    img = cv2.imread('static/images/img_now.jpg')
+    bf = cv2.bilateralFilter(src=img, d=Dimension,
+                             sigmaColor=sigma_color, sigmaSpace=sigma_space)
+    cv2.imwrite("static/images/img_now.jpg", bf)
+
+
+def lowFilterPass(image):
+    # create the low pass filter
+    lowFilter = np.ones((3, 3), np.float32)/9
+    # apply the low pass filter to the image
+    lowFilterImage = cv2.filter2D(image, -1, lowFilter)
+    return lowFilterImage
+
+
+def highFilterPass(image):
+    # create the high pass filter
+    highFilter = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]])
+    # apply the high pass filter to the image
+    highFilterImage = cv2.filter2D(image, -1, highFilter)
+    return highFilterImage
+
+
+def bandFilterPass(image):
+    # create the band pass filter
+    bandFilter = np.array([[1, -2, 1],
+                          [-2, 5, -2],
+                          [1, -2, 1]])
+    # apply the band pass filter to the image
+    bandFilterImage = cv2.filter2D(image, -1, bandFilter)
+    return bandFilterImage
+
+
+def choose_filter(mode):
+    img = cv2.imread('static/images/img_now.jpg')
+
+    if mode == "lowpass":
+        result = lowFilterPass(img)
+    elif mode == "highpass":
+        result = highFilterPass(img)
+    elif mode == "bandpass":
+        result = bandFilterPass(img)
+
+    cv2.imwrite("static/images/img_now.jpg", result)

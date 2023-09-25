@@ -449,5 +449,95 @@ def puzzle_random():
     return render_template('puzlle.html', image_urls=image_urls, size=piece)
 
 
+@app.route("/IdentityFilter", methods=["POST"])
+def IdentityFilter():
+    filename = request.form['image']
+    Image_Processing.identityFilter()
+    processing_thread = threading.Thread(
+        target=Image_Processing.both_histogram('static/images/img_now.jpg'))
+    processing_thread.start()
+
+    # Wait for the processing thread to finish
+    processing_thread.join()
+    return render_template("processing.html", image_name=filename)
+
+
+@app.route("/MeanFilter", methods=["POST"])
+def MeanFilter():
+    filename = request.form['image']
+    Image_Processing.MeanFilter()
+    processing_thread = threading.Thread(
+        target=Image_Processing.both_histogram('static/images/img_now.jpg'))
+    processing_thread.start()
+
+    # Wait for the processing thread to finish
+    processing_thread.join()
+    return render_template("processing.html", image_name=filename)
+
+
+@app.route("/Scaled_Blur", methods=["POST"])
+def Scaled_Blur():
+    filename = request.form['image']
+    factor = int(request.form['Blur'])
+    Image_Processing.BetterBlur(factor)
+    processing_thread = threading.Thread(
+        target=Image_Processing.both_histogram('static/images/img_now.jpg'))
+    processing_thread.start()
+
+    return render_template("processing.html", image_name=filename)
+
+
+@app.route("/Gaussian_Blur", methods=["POST"])
+def Gaussian_Blur():
+    filename = request.form['image']
+    factor = int(request.form['Blur'])
+    Image_Processing.GaussianBlur(factor)
+    processing_thread = threading.Thread(
+        target=Image_Processing.both_histogram('static/images/img_now.jpg'))
+    processing_thread.start()
+
+    return render_template("processing.html", image_name=filename)
+
+
+@app.route("/Median_Blur", methods=["POST"])
+def Median_Blur():
+    filename = request.form['image']
+    factor = int(request.form['Blur'])
+    Image_Processing.MedianBlur(factor)
+    processing_thread = threading.Thread(
+        target=Image_Processing.both_histogram('static/images/img_now.jpg'))
+    processing_thread.start()
+
+    return render_template("processing.html", image_name=filename)
+
+
+@app.route("/Billateral", methods=["POST"])
+def Billateral():
+    filename = request.form['image']
+    Dimension = int(request.form['Dimension'])
+    sigma_color = int(request.form['sigma_color'])
+    sigma_space = int(request.form['sigma_space'])
+
+    Image_Processing.BillateralFilter(Dimension, sigma_color, sigma_space)
+    processing_thread = threading.Thread(
+        target=Image_Processing.both_histogram('static/images/img_now.jpg'))
+    processing_thread.start()
+
+    return render_template("processing.html", image_name=filename)
+
+
+@app.route("/Option_Filter", methods=["POST"])
+def Option_Filter():
+    filename = request.form['image']
+    mode = request.form['filter_mode']
+
+    Image_Processing.choose_filter(mode)
+    processing_thread = threading.Thread(
+        target=Image_Processing.both_histogram('static/images/img_now.jpg'))
+    processing_thread.start()
+
+    return render_template("processing.html", image_name=filename)
+
+
 if __name__ == "__main__":
     app.run()

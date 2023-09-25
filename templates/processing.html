@@ -218,6 +218,57 @@
                 <input type="hidden" name="image" value="{{ image_name }}">
             </form>
         </div>
+
+        <div class="row marketing">
+            <div class="col-lg-6">
+                <h4>New Filtering</h4>
+                <form id="form-IdentityFilter" action="{{ url_for('IdentityFilter') }}" method="POST" enctype="multipart/form-data">
+                    <button id="btnColor" class="btn btn-lg btn-success" type="submit" name="mode" value="color">Identity Filter</button>
+                    <input type="hidden" name="image" value="{{ image_name }}">
+                </form>
+                <form id="form-MeanFilter" action="{{ url_for('MeanFilter') }}" method="POST" enctype="multipart/form-data">
+                    <button id="btnColor" class="btn btn-lg btn-success" type="submit" name="mode" value="color">Mean Filter</button>
+                    <input type="hidden" name="image" value="{{ image_name }}">
+                </form>
+                <form id="form-Better-Blur" action="{{ url_for('Scaled_Blur') }}" method="POST" enctype="multipart/form-data">
+                    <input type="number" name="Blur" placeholder="Blur" required>
+                    <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Blur </button>
+                    <input type="hidden" name="image" value="{{ image_name }}">
+                </form>
+                <form id="form-Gaussian-Blur" action="{{ url_for('Gaussian_Blur') }}" method="POST" enctype="multipart/form-data">
+                    <input type="number" name="Blur" placeholder="Blur" required>
+                    <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Gaussian Blur </button>
+                    <input type="hidden" name="image" value="{{ image_name }}">
+                </form>
+                <form id="form-Median-Blur" action="{{ url_for('Median_Blur') }}" method="POST" enctype="multipart/form-data">
+                    <input type="number" name="Blur" placeholder="Blur" required>
+                    <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Median Blur </button>
+                    <input type="hidden" name="image" value="{{ image_name }}">
+                </form>
+                <form id="form-Billateral-Filter" action="{{ url_for('Billateral') }}" method="POST" enctype="multipart/form-data">
+                    <input type="number" name="Dimension" placeholder="Dimension" required>
+                    <input type="number" name="sigma_color" placeholder="Sigma Color" required>
+                    <input type="number" name="sigma_space" placeholder="Sigma Space" required>
+                    <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Median Blur </button>
+                    <input type="hidden" name="image" value="{{ image_name }}">
+                </form>
+
+                <form id="form-Filter" action="{{ url_for('Option_Filter') }}" method="POST" enctype="multipart/form-data">
+                    <!-- Dropdown menu for filter mode -->
+                    <label for="filter_mode">Select Filter Mode:</label>
+                    <select name="filter_mode" id="filter_mode" required>
+                        <option value="lowpass">Lowpass</option>
+                        <option value="highpass">Highpass</option>
+                        <option value="bandpass">Bandpass</option>
+                    </select>
+                
+                    <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Apply  Filter</button>
+                    <input type="hidden" name="image" value="{{ image_name }}">
+                </form>
+                
+            </div>
+        </div>
+        
     </div>
 
     <div class="container">
