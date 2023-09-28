@@ -226,6 +226,8 @@
                     <button id="btnColor" class="btn btn-lg btn-success" type="submit" name="mode" value="color">Identity Filter</button>
                     <input type="hidden" name="image" value="{{ image_name }}">
                 </form>
+
+
                 <form id="form-MeanFilter" action="{{ url_for('MeanFilter') }}" method="POST" enctype="multipart/form-data">
                     <button id="btnColor" class="btn btn-lg btn-success" type="submit" name="mode" value="color">Mean Filter</button>
                     <input type="hidden" name="image" value="{{ image_name }}">
@@ -249,18 +251,30 @@
                     <input type="number" name="Dimension" placeholder="Dimension" required>
                     <input type="number" name="sigma_color" placeholder="Sigma Color" required>
                     <input type="number" name="sigma_space" placeholder="Sigma Space" required>
-                    <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Median Blur </button>
+                    <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Billateral Blur </button>
                     <input type="hidden" name="image" value="{{ image_name }}">
                 </form>
 
                 <form id="form-Filter" action="{{ url_for('Option_Filter') }}" method="POST" enctype="multipart/form-data">
-                    <!-- Dropdown menu for filter mode -->
                     <label for="filter_mode">Select Filter Mode:</label>
                     <select name="filter_mode" id="filter_mode" required>
                         <option value="lowpass">Lowpass</option>
                         <option value="highpass">Highpass</option>
                         <option value="bandpass">Bandpass</option>
                     </select>
+                
+                    <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Apply  Filter</button>
+                    <input type="hidden" name="image" value="{{ image_name }}">
+                </form>
+
+                <form id="form-Filter" action="{{ url_for('Random_Option_Filter') }}" method="POST" enctype="multipart/form-data">
+                    <label for="filter_mode">Select Filter Mode:</label>
+                    <select name="filter_mode" id="filter_mode" required>
+                        <option value="lowpass">Lowpass</option>
+                        <option value="highpass">Highpass</option>
+                        <option value="bandpass">Bandpass</option>
+                    </select>
+                    <input type="number" name="Dimension" placeholder="Dimension" required>
                 
                     <button class="btn btn-lg btn-success" type="submit" name="mode" value="left">Apply  Filter</button>
                     <input type="hidden" name="image" value="{{ image_name }}">

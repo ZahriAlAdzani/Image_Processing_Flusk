@@ -3,6 +3,7 @@ import numpy as np
 from PIL import Image, ImageFilter
 import matplotlib.pyplot as plt
 from collections import Counter
+import Kernel
 import os
 import pandas as pd
 import matplotlib
@@ -544,5 +545,42 @@ def choose_filter(mode):
         result = highFilterPass(img)
     elif mode == "bandpass":
         result = bandFilterPass(img)
+
+    cv2.imwrite("static/images/img_now.jpg", result)
+
+
+def Random_band_filter(image, size):
+    # create the band pass filter
+    bandFilter = Kernel.generate_band_pass(size)
+    # apply the band pass filter to the image
+    bandFilterImage = cv2.filter2D(image, -1, bandFilter)
+    return bandFilterImage
+
+
+def Random_high_filter(image, size):
+    # create the band pass filter
+    highfilter = Kernel.generate_high_pass(size)
+    # apply the band pass filter to the image
+    highFilterImage = cv2.filter2D(image, -1, highfilter)
+    return highFilterImage
+
+
+def Random_low_filter(image, size):
+    # create the band pass filter
+    lowfilter = Kernel.generate_low_pass(size)
+    # apply the band pass filter to the image
+    lowFilterImage = cv2.filter2D(image, -1, lowfilter)
+    return lowFilterImage
+
+
+def random_choose_filter(mode, size):
+    img = cv2.imread('static/images/img_now.jpg')
+
+    if mode == "lowpass":
+        result = Random_low_filter(img, size)
+    elif mode == "highpass":
+        result = Random_high_filter(img, size)
+    elif mode == "bandpass":
+        result = Random_band_filter(img, size)
 
     cv2.imwrite("static/images/img_now.jpg", result)

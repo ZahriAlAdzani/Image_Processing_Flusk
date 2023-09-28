@@ -539,5 +539,19 @@ def Option_Filter():
     return render_template("processing.html", image_name=filename)
 
 
+@app.route("/Random_Option_Filter", methods=["POST"])
+def Random_Option_Filter():
+    filename = request.form['image']
+    mode = request.form['filter_mode']
+    Dimension = int(request.form['Dimension'])
+
+    Image_Processing.random_choose_filter(mode, Dimension)
+    processing_thread = threading.Thread(
+        target=Image_Processing.both_histogram('static/images/img_now.jpg'))
+    processing_thread.start()
+
+    return render_template("processing.html", image_name=filename)
+
+
 if __name__ == "__main__":
     app.run()
