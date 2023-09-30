@@ -312,8 +312,8 @@ def blend():
     width = max(img1.size[0], img2.size[0])
     height = max(img1.size[1], img2.size[1])
 
-    img1 = img1.resize((width, height), Image.ANTIALIAS)
-    img2 = img2.resize((width, height), Image.ANTIALIAS)
+    img1 = img1.resize((width, height), Image.LANCZOS)
+    img2 = img2.resize((width, height), Image.LANCZOS)
 
     # If image1 is grayscale, convert image2 to grayscale
     if len(img1.mode) < 3:
